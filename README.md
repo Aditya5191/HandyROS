@@ -1,6 +1,10 @@
-# HandyROS
+<p align="center">
+  <img src="assets/icon/app_icon.png" width="128" alt="HandyROS icon" />
+</p>
 
-**A native mobile client for ROS 2 — no rosbridge, no intermediary server.**
+<h1 align="center">HandyROS</h1>
+
+<p align="center"><strong>A native mobile client for ROS 2 — no rosbridge, no intermediary server.</strong></p>
 
 HandyROS talks directly to your robot's DDS graph from a phone: it discovers
 topics, decodes and visualizes live sensor data, and can publish back onto

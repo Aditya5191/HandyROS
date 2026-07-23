@@ -16,6 +16,22 @@ class PhoneSensorPublisher extends ChangeNotifier {
   final DdsTopicService dds;
   PhoneSensorPublisher(this.dds);
 
+  // Sensor events (IMU especially, at 50Hz) fire far faster than the
+  // UI needs to redraw. DDS still gets every sample at full rate —
+  // dds_write is a cheap native call — but notifyListeners() drives a
+  // full rebuild of the Sensors screen's card list (camera preview
+  // included), so it's throttled separately to keep that off the fast
+  // path.
+  DateTime _lastUiNotify = DateTime.fromMillisecondsSinceEpoch(0);
+  static const _uiNotifyInterval = Duration(milliseconds: 100);
+  void _notifyThrottled() {
+    final now = DateTime.now();
+    if (now.difference(_lastUiNotify) >= _uiNotifyInterval) {
+      _lastUiNotify = now;
+      notifyListeners();
+    }
+  }
+
   // IMU: accelerometer + gyroscope folded into one sensor_msgs/Imu
   // stream, published at the accelerometer's own event rate — the
   // gyroscope's latest reading just rides along as it arrives.
@@ -48,7 +64,7 @@ class PhoneSensorPublisher extends ChangeNotifier {
             gy: g?.y ?? 0,
             gz: g?.z ?? 0,
           );
-          notifyListeners();
+          _notifyThrottled();
         });
     notifyListeners();
   }

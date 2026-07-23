@@ -107,73 +107,83 @@ class _SensorsScreenState extends State<SensorsScreen> {
                         padding: const EdgeInsets.fromLTRB(20, 4, 20, 112),
                         children: [
                           _sectionLabel('IMU'),
-                          _SensorCard(
-                            icon: Icons.explore,
-                            color: AppColors.sec,
-                            typeLabel: 'sensor_msgs/msg/Imu',
-                            topicController: _imuTopic,
-                            active: publisher.imuActive,
-                            onStart: () =>
-                                publisher.startImu(_imuTopic.text.trim()),
-                            onStop: publisher.stopImu,
-                            readout:
-                                publisher.imuActive &&
-                                    publisher.lastAccel != null
-                                ? '${publisher.lastAccel!.x.toStringAsFixed(2)}, ${publisher.lastAccel!.y.toStringAsFixed(2)}, ${publisher.lastAccel!.z.toStringAsFixed(2)} m/s²'
-                                : null,
+                          RepaintBoundary(
+                            child: _SensorCard(
+                              icon: Icons.explore,
+                              color: AppColors.sec,
+                              typeLabel: 'sensor_msgs/msg/Imu',
+                              topicController: _imuTopic,
+                              active: publisher.imuActive,
+                              onStart: () =>
+                                  publisher.startImu(_imuTopic.text.trim()),
+                              onStop: publisher.stopImu,
+                              readout:
+                                  publisher.imuActive &&
+                                      publisher.lastAccel != null
+                                  ? '${publisher.lastAccel!.x.toStringAsFixed(2)}, ${publisher.lastAccel!.y.toStringAsFixed(2)}, ${publisher.lastAccel!.z.toStringAsFixed(2)} m/s²'
+                                  : null,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           _sectionLabel('GPS'),
-                          _SensorCard(
-                            icon: Icons.satellite_alt,
-                            color: AppColors.amber,
-                            typeLabel: 'sensor_msgs/msg/NavSatFix',
-                            topicController: _gpsTopic,
-                            active: publisher.gpsActive,
-                            error: publisher.gpsError,
-                            onStart: () =>
-                                publisher.startGps(_gpsTopic.text.trim()),
-                            onStop: publisher.stopGps,
-                            readout:
-                                publisher.gpsActive &&
-                                    publisher.lastPosition != null
-                                ? '${publisher.lastPosition!.latitude.toStringAsFixed(5)}, ${publisher.lastPosition!.longitude.toStringAsFixed(5)}'
-                                : null,
+                          RepaintBoundary(
+                            child: _SensorCard(
+                              icon: Icons.satellite_alt,
+                              color: AppColors.amber,
+                              typeLabel: 'sensor_msgs/msg/NavSatFix',
+                              topicController: _gpsTopic,
+                              active: publisher.gpsActive,
+                              error: publisher.gpsError,
+                              onStart: () =>
+                                  publisher.startGps(_gpsTopic.text.trim()),
+                              onStop: publisher.stopGps,
+                              readout:
+                                  publisher.gpsActive &&
+                                      publisher.lastPosition != null
+                                  ? '${publisher.lastPosition!.latitude.toStringAsFixed(5)}, ${publisher.lastPosition!.longitude.toStringAsFixed(5)}'
+                                  : null,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           _sectionLabel('MAGNETOMETER'),
-                          _SensorCard(
-                            icon: Icons.explore_outlined,
-                            color: AppColors.lime,
-                            typeLabel: 'sensor_msgs/msg/MagneticField',
-                            topicController: _magTopic,
-                            active: publisher.magActive,
-                            onStart: () => publisher.startMagnetometer(
-                              _magTopic.text.trim(),
+                          RepaintBoundary(
+                            child: _SensorCard(
+                              icon: Icons.explore_outlined,
+                              color: AppColors.lime,
+                              typeLabel: 'sensor_msgs/msg/MagneticField',
+                              topicController: _magTopic,
+                              active: publisher.magActive,
+                              onStart: () => publisher.startMagnetometer(
+                                _magTopic.text.trim(),
+                              ),
+                              onStop: publisher.stopMagnetometer,
+                              readout:
+                                  publisher.magActive &&
+                                      publisher.lastMag != null
+                                  ? '${publisher.lastMag!.x.toStringAsFixed(1)}, ${publisher.lastMag!.y.toStringAsFixed(1)}, ${publisher.lastMag!.z.toStringAsFixed(1)} µT'
+                                  : null,
                             ),
-                            onStop: publisher.stopMagnetometer,
-                            readout:
-                                publisher.magActive && publisher.lastMag != null
-                                ? '${publisher.lastMag!.x.toStringAsFixed(1)}, ${publisher.lastMag!.y.toStringAsFixed(1)}, ${publisher.lastMag!.z.toStringAsFixed(1)} µT'
-                                : null,
                           ),
                           const SizedBox(height: 16),
                           _sectionLabel('CAMERA'),
-                          _SensorCard(
-                            icon: Icons.camera_alt,
-                            color: AppColors.pink,
-                            typeLabel: 'sensor_msgs/msg/Image · ~10 fps',
-                            topicController: _cameraTopic,
-                            active: publisher.cameraActive,
-                            error: publisher.cameraError,
-                            onStart: () =>
-                                publisher.startCamera(_cameraTopic.text.trim()),
-                            onStop: publisher.stopCamera,
-                            preview:
-                                publisher.cameraActive &&
-                                    publisher.cameraController != null
-                                ? publisher.cameraController!
-                                : null,
+                          RepaintBoundary(
+                            child: _SensorCard(
+                              icon: Icons.camera_alt,
+                              color: AppColors.pink,
+                              typeLabel: 'sensor_msgs/msg/Image · ~10 fps',
+                              topicController: _cameraTopic,
+                              active: publisher.cameraActive,
+                              error: publisher.cameraError,
+                              onStart: () => publisher.startCamera(
+                                _cameraTopic.text.trim(),
+                              ),
+                              onStop: publisher.stopCamera,
+                              preview:
+                                  publisher.cameraActive &&
+                                      publisher.cameraController != null
+                                  ? publisher.cameraController!
+                                  : null,
+                            ),
                           ),
                         ],
                       );
@@ -252,17 +262,25 @@ class _SensorCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 13),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            decoration: recessedDecoration(radius: 12),
-            child: TextField(
-              controller: topicController,
-              enabled: !active,
-              style: AppText.mono(size: 13, weight: FontWeight.w600),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12),
+          GestureDetector(
+            onTap: active ? null : () => _editTopicName(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+              decoration: recessedDecoration(radius: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: topicController,
+                      builder: (context, value, _) => Text(
+                        value.text,
+                        style: AppText.mono(size: 13, weight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  if (!active)
+                    Icon(Icons.edit_outlined, size: 15, color: AppColors.ink3),
+                ],
               ),
             ),
           ),
@@ -317,5 +335,37 @@ class _SensorCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _editTopicName(BuildContext context) async {
+    final controller = TextEditingController(text: topicController.text);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.card,
+        title: Text(
+          'Topic name',
+          style: AppText.disp(size: 15, weight: FontWeight.w600),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: AppText.mono(size: 13, weight: FontWeight.w600),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, controller.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (result != null) {
+      topicController.text = result;
+    }
   }
 }
