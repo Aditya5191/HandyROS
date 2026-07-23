@@ -1,0 +1,27 @@
+// Patched copy of the stock ROS 2 IDL: upstream declares a
+// `typedef double double__36[36]` identical to (and colliding with)
+// the one in PoseWithCovariance.idl — fine standalone, but neither
+// file has an include guard, so anything (like nav_msgs/Odometry.idl)
+// that includes both transitively fails to compile through idlc.
+// Renamed the local typedef to break the collision; everything else
+// matches geometry_msgs/msg/TwistWithCovariance.idl from ROS 2 Humble.
+
+#include "geometry_msgs/msg/Twist.idl"
+
+module geometry_msgs {
+  module msg {
+    typedef double double__36_twist[36];
+    @verbatim (language="comment", text=
+      "This expresses velocity in free space with uncertainty.")
+    struct TwistWithCovariance {
+      geometry_msgs::msg::Twist twist;
+
+      @verbatim (language="comment", text=
+        "Row-major representation of the 6x6 covariance matrix" "\n"
+        "The orientation parameters use a fixed-axis representation." "\n"
+        "In order, the parameters are:" "\n"
+        "(x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis)")
+      double__36_twist covariance;
+    };
+  };
+};

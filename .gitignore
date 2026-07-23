@@ -1,0 +1,96 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Claude Code's local session/settings dir — machine-specific, not source.
+.claude/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android — local machine config, build caches, and signing material.
+android/local.properties
+android/.gradle/
+android/.kotlin/
+android/**/.cxx/
+android/key.properties
+android/**/*.jks
+android/**/*.keystore
+# Prebuilt native lib: see README for how to build it. Left untracked
+# so the repo doesn't carry a stale binary every time handyros_core
+# changes — jniLibs/ itself stays (the directory is where `flutter
+# build` expects to find it after a native rebuild).
+android/app/src/main/jniLibs/**/*.so
+
+# iOS / Xcode related
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/App.framework
+ios/Flutter/flutter_assets/
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Pods/
+ios/.symlinks/
+**/Flutter/ephemeral/
+**/Pods/
+**/xcuserdata/
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+DerivedData/
+
+# handyros_core (native C++ core) — CMake build directories. There can
+# be more than one (Linux desktop dev-loop build, Android cross-compile
+# builds per ABI), hence the wildcard rather than a single `build/`.
+handyros_core/build/
+handyros_core/build-*/
+
+# third_party/cyclonedds is a git submodule (see .gitmodules) — its own
+# content is tracked via the submodule mechanism, not this .gitignore.
+# What *does* need ignoring is any local `cmake --install` output built
+# from it (one per target ABI/platform).
+third_party/install-*/
